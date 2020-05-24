@@ -1,13 +1,13 @@
 import { Mongo } from "meteor/mongo";
 import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
+import { render } from "react-dom";
 
 export const Info = new Mongo.Collection("info");
 
 if (Meteor.isServer) {
-  Meteor.publish("info", function (userId) {
-    if (!this.userId) return this.ready();
-    return Info.find({});
+  Meteor.publish("info", function () {
+    return Info.find().fetch();
   });
 }
 

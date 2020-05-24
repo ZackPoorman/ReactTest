@@ -1,24 +1,9 @@
 import { Meteor } from "meteor/meteor";
 import { Info } from "../imports/api/collection.jsx";
 
-Meteor.startup(() => {
-  try {
-    Accounts.createUser({
-      username: "user1",
-      password: "aaa",
-    });
-    Accounts.createUser({
-      username: "user2",
-      password: "aaa",
-    });
-    Accounts.createUser({
-      username: "user2",
-      password: "aaa",
-    });
-  } catch (error) {}
-});
-
+Meteor.startup(() => {});
+export const newInfo = new Mongo.Collection("newinfo");
 Meteor.publish("test", function () {
-  if (!this.userId) return this.ready();
-  return Info.find({}).fetch();
+  //if (!this.userId) return this.ready();
+  return newInfo.find().fetch();
 });

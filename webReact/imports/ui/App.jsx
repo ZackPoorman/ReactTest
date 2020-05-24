@@ -48,7 +48,6 @@ class App extends Component {
       paygrade: this.paygrade.value,
     });
   };
-  renderEmp() {}
 
   render() {
     return (
@@ -95,17 +94,17 @@ class App extends Component {
   }
 }
 
-export default withTracker(({ userId }) => {
-  const view = Meteor.subscribe("test");
+export default withTracker((props) => {
+  const view = Meteor.subscribe("test", {
+    firstName: this.firstName,
+    lastName: this.lastName,
+    title: this.title,
+    paygrade: this.paygrade,
+  });
   const inf = Meteor.subscribe("info");
-  const thisUser = Meteor.user();
   const loading = !view.ready() || !inf.ready();
-  let output = [];
-  if (!loading) {
-    output = Info.find({}).fetch();
-  }
   return {
     loading,
-    output,
+    output: Info.find().fetch(),
   };
 })(App);
