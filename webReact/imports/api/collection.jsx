@@ -5,17 +5,10 @@ import { withTracker } from "meteor/react-meteor-data";
 export const Info = new Mongo.Collection("info");
 
 if (Meteor.isServer) {
-  Meteor.publish("info", function employeePublication(
-    firstName,
-    lastName,
-    title,
-    paygrade
-  ) {
-    return Info.find();
+  Meteor.publish("info", function (userId) {
+    if (!this.userId) return this.ready();
+    return Info.find({});
   });
-}
-if (Meteor.isClient) {
-  Meteor.subscribe("info");
 }
 
 Meteor.methods({
@@ -27,9 +20,13 @@ Meteor.methods({
       paygrade: paygrade,
     });
   },
+  //Updates based on original name for each entry
   updateInfo: function ([firstName, lastName, title, paygrade]) {
     Info.update(
-      { firstName: this.firstName, lastName: this.lastName },
+      {
+        firstName: firstName,
+        lastName: lastName,
+      },
       {
         firstName: firstName,
         lastName: lastName,
@@ -44,33 +41,8 @@ Meteor.methods({
 
   viewInfo: function (firstName, lastName, title, paygrade) {
     Info.find({
-      firstName: firstName,
-      lastName: lastName,
-      title: title,
-      paygrade: paygrade,
-    });
+      firstName,
+      lastName,
+    }).fetch();
   },
 });
-
-class viewInf extends Component {
-  render() {
-    return (
-      <div>
-        {Info.find({
-          firstName: firstName,
-          lastName: lastName,
-          title: title,
-          paygrade: paygrade,
-        })}
-      </div>
-    );
-  }
-}
-
-export default withTracker((props) => {
-  const display = Meteor.subscribe("info");
-  return {
-    loading: !display.ready(),
-    infView: Info.find().fetch(),
-  };
-})(viewInf);

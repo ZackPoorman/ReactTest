@@ -95,10 +95,17 @@ class App extends Component {
   }
 }
 
-export default withTracker(() => {
-  const view = Meteor.subscribe("info");
+export default withTracker(({ userId }) => {
+  const view = Meteor.subscribe("test");
+  const inf = Meteor.subscribe("info");
+  const thisUser = Meteor.user();
+  const loading = !view.ready() || !inf.ready();
+  let output = [];
+  if (!loading) {
+    output = Info.find({}).fetch();
+  }
   return {
-    loading: !view.ready(),
-    info: Info.find().fetch(),
+    loading,
+    output,
   };
 })(App);

@@ -1,32 +1,24 @@
 import { Meteor } from "meteor/meteor";
-import { LinksCollection } from "/imports/api/links";
-import "../imports/api/collection.jsx";
-
-function insertLink({ title, url }) {
-  LinksCollection.insert({ title, url, createdAt: new Date() });
-}
+import { Info } from "../imports/api/collection.jsx";
 
 Meteor.startup(() => {
-  // If the Links collection is empty, add some data.
-  if (LinksCollection.find().count() === 0) {
-    insertLink({
-      title: "Do the Tutorial",
-      url: "https://www.meteor.com/tutorials/react/creating-an-app",
+  try {
+    Accounts.createUser({
+      username: "user1",
+      password: "aaa",
     });
+    Accounts.createUser({
+      username: "user2",
+      password: "aaa",
+    });
+    Accounts.createUser({
+      username: "user2",
+      password: "aaa",
+    });
+  } catch (error) {}
+});
 
-    insertLink({
-      title: "Follow the Guide",
-      url: "http://guide.meteor.com",
-    });
-
-    insertLink({
-      title: "Read the Docs",
-      url: "https://docs.meteor.com",
-    });
-
-    insertLink({
-      title: "Discussions",
-      url: "https://forums.meteor.com",
-    });
-  }
+Meteor.publish("test", function () {
+  if (!this.userId) return this.ready();
+  return Info.find({}).fetch();
 });
