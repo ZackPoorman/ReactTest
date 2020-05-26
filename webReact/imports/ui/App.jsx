@@ -48,6 +48,22 @@ class App extends Component {
       paygrade: this.paygrade.value,
     });
   };
+  renderView() {
+    let temp = [];
+    return temp.map((info) => {
+      return (
+        <div>
+          {Info.find({
+            firstName: this.firstName.value,
+            lastName: this.lastName.value,
+            title: this.title.value,
+            paygrade: this.paygrade.value,
+          })}
+          )
+        </div>
+      );
+    });
+  }
 
   render() {
     return (
@@ -87,24 +103,20 @@ class App extends Component {
           <button onClick={this.handleSubmit}>Add Employee</button>
           <button onClick={this.handleUpdate}>Update Info</button>
           <button onClick={this.handleRemove}>Remove Employee</button>
-          <button onClick={this.handleView}>View Employee</button>
+          <button onClick={(this.handleView, this.renderView)}>
+            View Employee
+          </button>
         </header>
       </div>
     );
   }
 }
 
-export default withTracker((props) => {
-  const view = Meteor.subscribe("test", {
-    firstName: this.firstName,
-    lastName: this.lastName,
-    title: this.title,
-    paygrade: this.paygrade,
-  });
-  const inf = Meteor.subscribe("info");
-  const loading = !view.ready() || !inf.ready();
+export default withTracker(() => {
+  const view = Meteor.subscribe("info");
+  const loading = !view.ready();
   return {
     loading,
-    output: Info.find().fetch(),
+    info: Info.find().fetch(),
   };
 })(App);

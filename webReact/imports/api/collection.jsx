@@ -1,13 +1,23 @@
 import { Mongo } from "meteor/mongo";
-import React, { Component } from "react";
+/*import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import { render } from "react-dom";
-
+*/
 export const Info = new Mongo.Collection("info");
 
+/* export function getEmpId([firstName, lastName, title, paygrade]) {
+  return Info.findOne(userId, {
+    firstName: firstName,
+    lastName: lastName,
+    title: title,
+    paygrade: paygrade,
+  });
+} */
+
 if (Meteor.isServer) {
-  Meteor.publish("info", function () {
-    return Info.find().fetch();
+  Meteor.publish("info", function (userId) {
+    if (!this.userId) return Info.find();
+    return Info.find();
   });
 }
 
@@ -43,6 +53,8 @@ Meteor.methods({
     Info.find({
       firstName,
       lastName,
+      title,
+      paygrade,
     }).fetch();
   },
 });
