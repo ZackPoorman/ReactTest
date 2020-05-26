@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { withTracker } from "meteor/react-meteor-data";
-import { Info } from "../api/collection.jsx";
 
 class App extends Component {
   constructor(props) {
@@ -48,22 +47,6 @@ class App extends Component {
       paygrade: this.paygrade.value,
     });
   };
-  renderView() {
-    let temp = [];
-    return temp.map((info) => {
-      return (
-        <div>
-          {Info.find({
-            firstName: this.firstName.value,
-            lastName: this.lastName.value,
-            title: this.title.value,
-            paygrade: this.paygrade.value,
-          })}
-          )
-        </div>
-      );
-    });
-  }
 
   render() {
     return (
@@ -113,10 +96,10 @@ class App extends Component {
 }
 
 export default withTracker(() => {
-  const view = Meteor.subscribe("info");
+  const view = Meteor.subscribe("All_Info");
   const loading = !view.ready();
   return {
     loading,
-    info: Info.find().fetch(),
+    in: Info.find().fetch(),
   };
 })(App);
