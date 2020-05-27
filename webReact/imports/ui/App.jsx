@@ -5,6 +5,10 @@ import { withTracker } from "meteor/react-meteor-data";
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      currInfo: [],
+    };
   }
 
   handleSubmit = (event) => {
@@ -34,21 +38,26 @@ class App extends Component {
   };
 
   handleView = (event) => {
-    /*     Info.findOne({
-      firstName: this.firstName.value,
-      lastName: this.lastName.value,
-      title: this.title.value,
-      paygrade: this.paygrade.value,
-    }); */
-    Meteor.call("viewInfo", {
-      firstName: this.firstName.value,
-      lastName: this.lastName.value,
-      title: this.title.value,
-      paygrade: this.paygrade.value,
+    let enteredData;
+    enteredData = this.props.in.find((docObject) => {
+      console.log(enteredData);
+      return (
+        docObject.firstName === this.firstName.value &&
+        docObject.lastName === this.lastName.value
+      );
+    });
+    this.setState({
+      currInfo: {
+        firstName: enteredData.firstName,
+        lastName: enteredData.lastName,
+        title: enteredData.title,
+        paygrade: enteredData.paygrade,
+      },
     });
   };
 
   render() {
+    //console.log(this.props);
     return (
       <div className="container">
         <header>
@@ -83,23 +92,39 @@ class App extends Component {
               placeholder="Current Pay Grade"
             />
           </form>
-          <button onClick={this.handleSubmit}>Add Employee</button>
-          <button onClick={this.handleUpdate}>Update Info</button>
-          <button onClick={this.handleRemove}>Remove Employee</button>
-          <button onClick={(this.handleView, this.renderView)}>
-            View Employee
-          </button>
+          <button onClick={() => this.handleSubmit()}>Add Employee</button>
+          <button onClick={() => this.handleUpdate()}>Update Info</button>
+          <button onClick={() => this.handleRemove()}>Remove Employee</button>
+          <button onClick={() => this.handleView()}>View Employee</button>
         </header>
+        <textarea
+          type=""
+          value={
+            this.state.currInfo.firstName +
+            " " +
+            this.state.currInfo.lastName +
+            " " +
+            this.state.currInfo.title +
+            " " +
+            this.state.currInfo.paygrade
+          }
+          readOnly={true}
+          placeholder="Employee Info..."
+        />
       </div>
     );
   }
 }
 
-export default withTracker(() => {
+const infoContainer = withTracker(() => {
   const view = Meteor.subscribe("All_Info");
   const loading = !view.ready();
+  //console.log(loading);
+  //let temp = Info.find().fetch();
+  //console.log(temp);
   return {
     loading,
     in: Info.find().fetch(),
   };
 })(App);
+export default infoContainer;

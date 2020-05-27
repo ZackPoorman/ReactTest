@@ -1,3 +1,5 @@
+import React, { Component } from "react";
+
 Meteor.methods({
   submitInfo: function ([firstName, lastName, title, paygrade]) {
     Info.insert({
@@ -24,14 +26,5 @@ Meteor.methods({
   },
   removeInfo: function (firstName, lastName) {
     Info.remove(firstName, lastName);
-  },
-
-  viewInfo: function (firstName, lastName, title, paygrade) {
-    return Info.find({
-      firstName,
-      lastName,
-      title,
-      paygrade,
-    }).fetch();
   },
 });
