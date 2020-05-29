@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { withTracker } from "meteor/react-meteor-data";
 
 class App extends Component {
@@ -11,7 +10,7 @@ class App extends Component {
     };
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = () => {
     Meteor.call("submitInfo", [
       this.firstName.value,
       this.lastName.value,
@@ -21,7 +20,7 @@ class App extends Component {
   };
 
   //No handling of employees with same name -> Give them a role designation "Dev 2"
-  handleUpdate = (event) => {
+  handleUpdate = () => {
     Meteor.call("updateInfo", [
       this.firstName.value,
       this.lastName.value,
@@ -30,14 +29,14 @@ class App extends Component {
     ]);
   };
 
-  handleRemove = (event) => {
+  handleRemove = () => {
     Meteor.call("removeInfo", {
       firstName: this.firstName.value,
       lastName: this.lastName.value,
     });
   };
 
-  handleView = (event) => {
+  handleView = () => {
     let enteredData;
     enteredData = this.props.in.find((docObject) => {
       console.log(enteredData);
