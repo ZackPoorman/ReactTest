@@ -5,7 +5,7 @@
 
 import React, {useState} from 'react';
 import Meteor, {withTracker, NetInfo} from 'react-native-meteor';
-import {Text, View, TextInput, Button} from 'react-native';
+import {Text, View, TextInput, Button, Alert} from 'react-native';
 
 //Replace the 1.13 part of below with your IP
 Meteor.connect('ws://192.168.1.13:3000/websocket');
@@ -35,17 +35,23 @@ const App = props => {
 
   const handleView = () => {
     let enteredData = props.in.find(docObject => {
-      //console.log(enteredData);
       return (
         docObject.firstName === firstName && docObject.lastName === lastName
       );
     });
-    setCurrInfo({
-      firstName: enteredData.firstName,
-      lastName: enteredData.lastName,
-      title: enteredData.title,
-      paygrade: enteredData.paygrade,
-    });
+    if (enteredData === undefined) {
+      Alert.alert(
+        'No Employee with that name.',
+        'Please verify the information entered is correct',
+      );
+    } else {
+      setCurrInfo({
+        firstName: enteredData.firstName,
+        lastName: enteredData.lastName,
+        title: enteredData.title,
+        paygrade: enteredData.paygrade,
+      });
+    }
   };
 
   return (
@@ -92,10 +98,8 @@ const App = props => {
 };
 
 const infoContainer = withTracker(() => {
-  console.log(Meteor.status());
   const view = Meteor.subscribe('All_Info');
   const loading = !view.ready();
-  console.log(loading);
   return {
     loading,
     in: Meteor.collection('Info').find(),

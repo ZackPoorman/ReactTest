@@ -39,7 +39,6 @@ class App extends Component {
   handleView = () => {
     let enteredData;
     enteredData = this.props.in.find((docObject) => {
-      console.log(enteredData);
       return (
         docObject.firstName === this.firstName.value &&
         docObject.lastName === this.lastName.value
@@ -56,7 +55,6 @@ class App extends Component {
   };
 
   render() {
-    //console.log(this.props);
     return (
       <div className="container">
         <header>
@@ -96,20 +94,23 @@ class App extends Component {
           <button onClick={() => this.handleRemove()}>Remove Employee</button>
           <button onClick={() => this.handleView()}>View Employee</button>
         </header>
-        <textarea
-          type=""
-          value={
-            this.state.currInfo.firstName +
-            " " +
-            this.state.currInfo.lastName +
-            " " +
-            this.state.currInfo.title +
-            " " +
-            this.state.currInfo.paygrade
-          }
-          readOnly={true}
-          placeholder="Employee Info..."
-        />
+        <div>
+          <text>{"Employee Info: "}</text>
+        </div>
+        <div>
+          <text>{`First Name: ${
+            this.state.currInfo?.firstName ?? "n/a"
+          }`}</text>
+        </div>
+        <div>
+          <text>{`Last Name : ${this.state.currInfo?.lastName ?? "n/a"}`}</text>
+        </div>
+        <div>
+          <text>{`Title: ${this.state.currInfo?.title ?? "n/a"}`}</text>
+        </div>
+        <div>
+          <text>{`Paygrade: ${this.state.currInfo?.paygrade ?? "n/a"}`}</text>
+        </div>
       </div>
     );
   }
@@ -118,9 +119,7 @@ class App extends Component {
 const infoContainer = withTracker(() => {
   const view = Meteor.subscribe("All_Info");
   const loading = !view.ready();
-  //console.log(loading);
-  //let temp = Info.find().fetch();
-  //console.log(temp);
+
   return {
     loading,
     in: Info.find().fetch(),
